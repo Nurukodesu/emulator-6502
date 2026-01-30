@@ -4,6 +4,7 @@ use crate::memory::{Memory};
 
 const N: u8 = 0x80;
 const V: u8 = 0x40;
+const U: u8 = 0x20;
 const B: u8 = 0x10;
 const D: u8 = 0x08;
 const I: u8 = 0x04;
@@ -43,10 +44,6 @@ impl Processor{
         self.p = if value==V{ self.p|V} else {self.p&!V };
     }
 
-    fn setB(&mut self, value: u8){
-        self.p = if value==B{ self.p|B} else {self.p&!B };
-    }
-
     fn setD(&mut self, value: u8){
         self.p = if value==D{ self.p|D} else {self.p&!D };
     }
@@ -77,6 +74,17 @@ impl Processor{
 
     fn write(&self, mem: &mut Memory, addr: u16, value:u8){
         mem.write(addr, value);
+    }
+    
+    fn push(&mut self, mem: &mut Memory, value: u8){
+        mem.write(0x0100|self.s as u16, value);
+        self.s = self.s.wrapping_sub(1);
+    }
+    
+    fn pull(&mut self, mem: &Memory) -> u8 {
+        let addr = 0x0100 | self.s as u16;
+        self.s = self.s.wrapping_add(1);
+        self.read(mem, addr);
     }
     
     // Addressing
@@ -311,12 +319,10 @@ impl Processor{
     }
     
     fn pha(&mut self, mem: &mut Memory){
-        mem.write(self.getsp(), self.a);
-        self.s = self.s.wrapping_sub(1);
+        self.push(mem, self.a);
     }
     fn php(&mut self, mem: &mut Memory){
-        mem.write(self.getsp(), self.p);
-        self.s = self.s.wrapping_sub(1);
+        self.push(mem, self.a | U);
     }
 
     fn tax(&mut self){
@@ -1235,6 +1241,11 @@ impl Processor{
     }
     fn sev(&mut self){
         self.p = self.p|V;
+    }
+    
+    fn brk(&mut self, mem: &mut Memory){
+        self.pc = self.pc.wrapping_add(1);
+             
     }
 
     pub fn test(&mut self){
