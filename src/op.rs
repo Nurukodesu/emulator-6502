@@ -73,3 +73,108 @@ pub const EOR_ABSX: u8 = 0x5D;
 pub const EOR_ABSY: u8 = 0x59;
 pub const EOR_INDX: u8 = 0x41;
 pub const EOR_INDY: u8 = 0x51;
+
+pub const BIT_ZP: u8 = 0x24;
+pub const BIT_ABS: u8 = 0x2C;
+
+pub const ADC_IMM: u8 = 0x69;
+pub const ADC_ZP: u8 = 0x65;
+pub const ADC_ZPX: u8 = 0x75;
+pub const ADC_ABS: u8 = 0x6D;
+pub const ADC_ABSX: u8 = 0x7D;
+pub const ADC_ABSY: u8 = 0x79;
+pub const ADC_INDX: u8 = 0x61;
+pub const ADC_INDY: u8 = 0x71;
+
+pub const SBC_IMM: u8 = 0xE9;
+pub const SBC_ZP: u8 = 0xE5;
+pub const SBC_ZPX: u8 = 0xF5;
+pub const SBC_ABS: u8 = 0xED;
+pub const SBC_ABSX: u8 = 0xFD;
+pub const SBC_ABSY: u8 = 0xF9;
+pub const SBC_INDX: u8 = 0xE1;
+pub const SBC_INDY: u8 = 0xF1;
+
+pub const CMP_IMM: u8 = 0xC9;
+pub const CMP_ZP: u8 = 0xC5;
+pub const CMP_ZPX: u8 = 0xD5;
+pub const CMP_ABS: u8 = 0xCD;
+pub const CMP_ABSX: u8 = 0xDD;
+pub const CMP_ABSY: u8 = 0xD9;
+pub const CMP_INDX: u8 = 0xC1;
+pub const CMP_INDY: u8 = 0xD1;
+
+pub const CPX_IMM: u8 = 0xE0;
+pub const CPX_ZP: u8 = 0xE4;
+pub const CPX_ABS: u8 = 0xEC;
+
+pub const CPY_IMM: u8 = 0xC0;
+pub const CPY_ZP: u8 = 0xC4;
+pub const CPY_ABS: u8 = 0xCC;
+
+pub const INC_ZP: u8 = 0xE6;
+pub const INC_ZPX: u8 = 0xF6;
+pub const INC_ABS: u8 = 0xEE;
+pub const INC_ABSX: u8 = 0xFE;
+
+pub const INX: u8 = 0xE8;
+pub const INY: u8 = 0xC8;
+
+pub const DEC_ZP: u8 = 0xC6;
+pub const DEC_ZPX: u8 = 0xD6;
+pub const DEC_ABS: u8 = 0xCE;
+pub const DEC_ABSX: u8 = 0xDE;
+
+pub const DEX: u8 = 0xCA;
+pub const DEY: u8 = 0x88;
+
+pub const ASL: u8 = 0x0A;
+pub const ASL_ZP: u8 = 0x06;
+pub const ASL_ZPX: u8 = 0x16;
+pub const ASL_ABS: u8 = 0x0E;
+pub const ASL_ABSX: u8 = 0x1E;
+
+pub const LSR: u8 = 0x4A;
+pub const LSR_ZP: u8 = 0x46;
+pub const LSR_ZPX: u8 = 0x56;
+pub const LSR_ABS: u8 = 0x4E;
+pub const LSR_ABSX: u8 = 0x5E;
+
+pub const ROL: u8 = 0x2A;
+pub const ROL_ZP: u8 = 0x26;
+pub const ROL_ZPX: u8 = 0x36;
+pub const ROL_ABS: u8 = 0x02;
+pub const ROL_ABSX: u8 = 0x13;
+
+pub const ROR: u8 = 0x6A;
+pub const ROR_ZP: u8 = 0x66;
+pub const ROR_ZPX: u8 = 0x76;
+pub const ROR_ABS: u8 = 0x6E;
+pub const ROR_ABSX: u8 = 0x7E;
+
+pub const JSR: u8 = 0x20;
+pub const RTS: u8 = 0x60;
+pub const JMP_ABS: u8 = 0x4C;
+pub const JMP_IND: u8 = 0x6C;
+
+pub const BPL: u8 = 0x10;
+pub const BMI: u8 = 0x30;
+pub const BEQ: u8 = 0xF0;
+pub const BNE: u8 = 0xD0;
+pub const BCC: u8 = 0x90;
+pub const BCS: u8 = 0xB0;
+pub const BVC: u8 = 0x50;
+pub const BVS: u8 = 0x70;
+
+pub const CLC: u8 = 0x18;
+pub const CLD: u8 = 0xD8;
+pub const CLI: u8 = 0x58;
+pub const CLV: u8 = 0xB8;
+
+pub const SEC: u8 = 0x38;
+pub const SED: u8 = 0xF8;
+pub const SEI: u8 = 0x78;
+
+pub const BRK: u8 = 0x00;
+pub const RTI: u8 = 0x40;
+pub const NOP: u8 = 0xEA;

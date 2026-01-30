@@ -1312,7 +1312,37 @@ impl Processor{
             PHP => self.php(mem),
             PLA => self.pla(mem),
             PLP => self.plp(mem),
-            _ => panic!("Unknown opcode {:02X}", opcode)
+
+            ORA_IMM => self.ora_imm(mem),
+            ORA_ZP => self.ora_zp(mem),
+            ORA_ZPX => self.ora_zpx(mem),
+            ORA_ABS => self.ora_abs(mem),
+            ORA_ABSX => self.ora_absx(mem),
+            ORA_ABSY => self.ora_absy(mem),
+            ORA_INDX => self.ora_indx(mem),
+            ORA_INDY => self.ora_indy(mem),
+
+            AND_IMM => self.and_imm(mem),
+            AND_ZP => self.and_zp(mem),
+            AND_ZPX => self.and_zpx(mem),
+            AND_ABS => self.and_abs(mem),
+            AND_ABSX => self.and_absx(mem),
+            AND_ABSY => self.and_absy(mem),
+            AND_INDX => self.and_indx(mem),
+            AND_INDY => self.and_indy(mem),
+
+            EOR_IMM => self.eor_imm(mem),
+            EOR_ZP => self.eor_zp(mem),
+            EOR_ZPX => self.eor_zpx(mem),
+            EOR_ABS => self.eor_abs(mem),
+            EOR_ABSX => self.eor_absx(mem),
+            EOR_ABSY => self.eor_absy(mem),
+            EOR_INDX => self.eor_indx(mem),
+            EOR_INDY => self.eor_indy(mem),
+            
+            BIT_ZP => self.bit_zp(mem),
+            BIT_ABS => self.bit_abs(mem),
+            _ => {panic!("Unknown opcode {:02X}", opcode)}
         }
     }
 }
