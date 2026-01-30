@@ -1,6 +1,8 @@
+use std::fmt::Display;
 use std::{ops::Add};
 
 use crate::memory::{Memory};
+use crate::op::*;
 
 const N: u8 = 0x80;
 const V: u8 = 0x40;
@@ -27,13 +29,9 @@ impl Processor{
             x: 0,
             y: 0,
             s: 0xFF,
-            pc: 0,
+            pc: 0x8000,
             p: 0
         }
-    }
-
-    pub fn getsp(&self)->u16{
-        0x0100 | self.s as u16
     }
 
     fn setN(&mut self, value: u8){
@@ -82,9 +80,8 @@ impl Processor{
     }
     
     fn pull(&mut self, mem: &Memory) -> u8 {
-        let addr = 0x0100 | self.s as u16;
         self.s = self.s.wrapping_add(1);
-        self.read(mem, addr);
+        self.read(mem, 0x0100|self.s as u16)
     }
     
     // Addressing
@@ -179,6 +176,12 @@ impl Processor{
     }
     fn lda_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
+        self.a = self.read(mem, addr);
+        self.setZ(if self.a==0{Z}else{0});
+        self.setN(if self.a&N!=0{N}else{0});
+    }
+    fn lda_absx(&mut self, mem: &Memory){
+        let addr = self.absx(mem);
         self.a = self.read(mem, addr);
         self.setZ(if self.a==0{Z}else{0});
         self.setN(if self.a&N!=0{N}else{0});
@@ -309,8 +312,8 @@ impl Processor{
         let addr = self.zp(mem);
         self.write(mem, addr, self.y);
     }
-    fn sty_zpy(&mut self, mem: &mut Memory){
-        let addr = self.zpy(mem);
+    fn sty_zpx(&mut self, mem: &mut Memory){
+        let addr = self.zpx(mem);
         self.write(mem, addr, self.y);
     }
     fn sty_abs(&mut self, mem: &mut Memory){
@@ -355,14 +358,12 @@ impl Processor{
     }
 
     fn pla(&mut self, mem: &Memory){
-        self.s = self.s.wrapping_add(1);
-        self.a = mem.read(self.getsp());
+        self.a = self.pull(mem);
         self.setZ(if self.a==0{Z}else{0});
         self.setN(if self.a&N!=0{N}else{0});
     }
     fn plp(&mut self, mem: &Memory){
-        self.s = self.s.wrapping_add(1);
-        self.p = mem.read(self.getsp());
+        self.p = self.pull(mem);
     }
    
     fn and_imm(&mut self, mem: &Memory){
@@ -1165,15 +1166,15 @@ impl Processor{
     fn jsr(&mut self, mem: &mut Memory){
         let addr = self.abs(mem);
         let bytes = (self.pc-1).to_le_bytes();
-        mem.write(self.getsp(), bytes[0]);
-        mem.write(self.getsp()-1, bytes[1]);
-        self.s = self.s.wrapping_sub(2);
+        self.push(mem, bytes[0]);
+        self.push(mem, bytes[1]);
         self.pc = addr;
     }
     
     fn rts(&mut self, mem: &Memory){
-        self.s = self.s.wrapping_add(2);
-        self.pc = mem.read_u16(self.getsp())
+        let lo = self.pull(mem) as u16;
+        let hi = self.pull(mem) as u16;
+        self.pc = hi<<8 + lo;
     }
  
     fn bcs(&mut self, mem: &Memory){
@@ -1245,19 +1246,80 @@ impl Processor{
     
     fn brk(&mut self, mem: &mut Memory){
         self.pc = self.pc.wrapping_add(1);
-             
+        let bytes = self.pc.to_le_bytes();
+        self.push(mem, bytes[0]);
+        self.push(mem, bytes[1]);
+        self.push(mem, self.p|B|U);
+        self.p |= I;
+    }
+    
+    fn rti(&mut self, mem: &Memory) {
+        self.p = (self.pull(mem) & !B) | U;
+        let lo = self.pull(mem) as u16;
+        let hi = self.pull(mem) as u16;
+        self.pc = (hi << 8) | lo
     }
 
-    pub fn test(&mut self){
-        let mut mem = Memory::new();
-        mem.write(0x0012, 0x01);
-        mem.write(0x0013, 0x00);
-        mem.write(256, 2);
-        self.pc = 0x0012;
-        self.jsr(&mut mem);
-        println!("{:x}", self.pc);
-        self.rts(&mem);
-        println!("{:x}", self.pc);        
-    }
+    pub fn step(&mut self, mem: &mut Memory){
+        let opcode = mem.read(self.pc);
+        self.pc = self.pc.wrapping_add(1);
+        match opcode {
+            LDA_IMM => self.lda_imm(mem),
+            LDA_ZP => self.lda_zp(mem),
+            LDA_ZPX => self.lda_zpx(mem),
+            LDA_ABS => self.lda_abs(mem),
+            LDA_ABSX => self.lda_absx(mem),
+            LDA_ABSY => self.lda_absy(mem),
+            LDA_INDX => self.lda_indx(mem),
+            LDA_INDY => self.lda_indy(mem),
+            
+            LDX_IMM => self.ldx_imm(mem),
+            LDX_ZP => self.ldx_zp(mem),
+            LDX_ZPY => self.ldx_zpy(mem),
+            LDX_ABS => self.ldx_abs(mem),
+            LDX_ABSY => self.ldx_absy(mem),
+            
+            LDY_IMM => self.ldy_imm(mem),
+            LDY_ZP => self.ldy_zp(mem),
+            LDY_ZPX => self.ldy_zpx(mem),
+            LDY_ABS => self.ldy_abs(mem),
+            LDY_ABSX => self.ldy_absx(mem),
+            
+            STA_ZP => self.sta_zp(mem),
+            STA_ZPX => self.sta_zpx(mem),
+            STA_ABS => self.sta_abs(mem),
+            STA_ABSX => self.sta_absx(mem),
+            STA_ABSY => self.sta_absy(mem),
+            STA_INDX => self.sta_indx(mem),
+            STA_INDY => self.sta_indy(mem),
+            
+            STX_ZP => self.stx_zp(mem),
+            STX_ZPY => self.stx_zpy(mem),
+            STX_ABS => self.stx_abs(mem),
 
+            STY_ZP => self.sty_zp(mem),
+            STY_ZPX => self.sty_zpx(mem),
+            STY_ABS => self.sty_abs(mem),
+            
+            TAX => self.tax(),
+            TXA => self.txa(),
+            TAY => self.tay(),
+            TYA => self.tay(),
+            TSX => self.tsx(),
+            TXS => self.txs(),
+            
+            PHA => self.pha(mem),
+            PHP => self.php(mem),
+            PLA => self.pla(mem),
+            PLP => self.plp(mem),
+            _ => panic!("Unknown opcode {:02X}", opcode)
+        }
+    }
+}
+
+impl Display for Processor{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, 
+            "A: {:X}\nX: {:X}\nY: {:X}\nPC: {:X}\nS: {:X}\nP: {:b}", self.a, self.x, self.y, self.pc, self.s, self.p)
+    }
 }
