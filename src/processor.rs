@@ -33,28 +33,29 @@ impl Processor{
             p: 0
         }
     }
-
-    fn setN(&mut self, value: u8){
+    pub fn nes() -> Processor{
+        Processor{
+            a: 0,
+            x: 0,
+            y: 0,
+            s: 0xFD,
+            pc: 0xC000,
+            p: 0x24
+        }
+    }
+    fn setn(&mut self, value: u8){
         self.p = if value==N{ self.p|N} else {self.p&!N };
     }
 
-    fn setV(&mut self, value: u8){
+    fn setv(&mut self, value: u8){
         self.p = if value==V{ self.p|V} else {self.p&!V };
     }
 
-    fn setD(&mut self, value: u8){
-        self.p = if value==D{ self.p|D} else {self.p&!D };
-    }
-
-    fn setI(&mut self, value: u8){
-        self.p = if value==I{ self.p|I} else {self.p&!I };
-    }
-
-    fn setZ(&mut self, value: u8){
+    fn setz(&mut self, value: u8){
         self.p = if value==Z{ self.p|Z} else {self.p&!Z };
     }
 
-    fn setC(&mut self, value: u8){
+    fn setc(&mut self, value: u8){
         self.p = if value==C{ self.p|C} else {self.p&!C };
     }
 
@@ -152,118 +153,118 @@ impl Processor{
     fn rel(&mut self, mem: &Memory) -> u16{
         let offset = self.read_i8(mem, self.pc) as i16;
         self.pc = self.pc.wrapping_add(1);
-        ((self.pc as i16)+offset) as u16
+        ((self.pc as i16).wrapping_add(offset)) as u16
     }
     
     // Instructions
     fn lda_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lda_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lda_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lda_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lda_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lda_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lda_indx(&mut self, mem: &Memory){
         let addr = self.indx(mem);
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lda_indy(&mut self, mem: &Memory){
         let addr = self.indy(mem);
         self.a = self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
 
     fn ldx_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         self.x = self.read(mem, addr);
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn ldx_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         self.x = self.read(mem, addr);
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn ldx_zpy(&mut self, mem: &Memory){
         let addr = self.zpy(mem);
         self.x = self.read(mem, addr);
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn ldx_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         self.x = self.read(mem, addr);
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn ldx_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         self.x = self.read(mem, addr);
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn ldy_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         self.y = self.read(mem, addr);
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     fn ldy_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         self.y = self.read(mem, addr);
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     fn ldy_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         self.y = self.read(mem, addr);
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     fn ldy_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         self.y = self.read(mem, addr);
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     fn ldy_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         self.y = self.read(mem, addr);
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     
     fn sta_zp(&mut self, mem: &mut Memory){
@@ -330,28 +331,28 @@ impl Processor{
 
     fn tax(&mut self){
         self.x = self.a;
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn tay(&mut self){
         self.y = self.a;
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     fn txa(&mut self){
         self.a = self.x;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn txy(&mut self){
+    fn tya(&mut self){
         self.a = self.y;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn tsx(&mut self){
         self.x = self.s;
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn txs(&mut self){
         self.s = self.x;
@@ -359,8 +360,8 @@ impl Processor{
 
     fn pla(&mut self, mem: &Memory){
         self.a = self.pull(mem);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn plp(&mut self, mem: &Memory){
         self.p = self.pull(mem);
@@ -369,163 +370,163 @@ impl Processor{
     fn and_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn and_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn and_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn and_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn and_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn and_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn and_indx(&mut self, mem: &Memory){
         let addr = self.indx(mem);
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn and_indy(&mut self, mem: &Memory){
         let addr = self.indy(mem);
         self.a &= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     
     fn eor_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn eor_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn eor_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn eor_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn eor_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn eor_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn eor_indx(&mut self, mem: &Memory){
         let addr = self.indx(mem);
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn eor_indy(&mut self, mem: &Memory){
         let addr = self.indy(mem);
         self.a ^= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
 
     fn ora_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ora_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ora_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ora_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ora_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ora_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ora_indx(&mut self, mem: &Memory){
         let addr = self.indx(mem);
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ora_indy(&mut self, mem: &Memory){
         let addr = self.indy(mem);
         self.a |= self.read(mem, addr);
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     
     fn bit_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
-        self.setZ(if self.a&m==0{Z}else{0});
-        self.setV(m&V);
-        self.setN(m&N);
+        self.setz(if self.a&m==0{Z}else{0});
+        self.setv(m&V);
+        self.setn(m&N);
     }
     fn bit_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
-        self.setZ(if self.a&m==0{Z}else{0});
-        self.setV(m&V);
-        self.setN(m&N);
+        self.setz(if self.a&m==0{Z}else{0});
+        self.setv(m&V);
+        self.setn(m&N);
     }
     
     fn adc_imm(&mut self, mem: &Memory){
@@ -533,627 +534,557 @@ impl Processor{
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn adc_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn adc_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn adc_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn adc_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn adc_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn adc_indx(&mut self, mem: &Memory){
         let addr = self.indx(mem);
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn adc_indy(&mut self, mem: &Memory){
         let addr = self.indy(mem);
         let m = self.read(mem, addr);
         let c = self.p&C;
         let sum = self.a as u16 + m as u16 + c as u16;
-        self.setC(if sum&0x100!=0{C}else{0});
+        self.setc(if sum&0x100!=0{C}else{0});
         let overflow= !(self.a^m) & (self.a^sum as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = sum as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     
     
-    fn sdc_imm(&mut self, mem: &Memory){
+    fn sbc_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn sdc_zp(&mut self, mem: &Memory){
+    fn sbc_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn sdc_zpx(&mut self, mem: &Memory){
+    fn sbc_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn sdc_abs(&mut self, mem: &Memory){
+    fn sbc_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn sdc_absx(&mut self, mem: &Memory){
+    fn sbc_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn sdc_absy(&mut self, mem: &Memory){
+    fn sbc_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn sdc_indx(&mut self, mem: &Memory){
+    fn sbc_indx(&mut self, mem: &Memory){
         let addr = self.indx(mem);
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
-    fn sdc_indy(&mut self, mem: &Memory){
+    fn sbc_indy(&mut self, mem: &Memory){
         let addr = self.indy(mem);
         let m = self.read(mem, addr);
         let m_inverse = m ^ 0xFF;
         let c = self.p&C;
         let diff = self.a as u16 + m_inverse as u16 + c as u16;
-        self.setC(if diff&0x100!=0{C}else{0});
+        self.setc(if diff&0x100!=0{C}else{0});
         let overflow= ((diff as u8)^m_inverse) & (self.a^diff as u8) & N !=0;
-        self.setV(if overflow{V}else{0});
+        self.setv(if overflow{V}else{0});
         self.a = diff as u8;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     
     fn cmp_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn cmp_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn cmp_zpx(&mut self, mem: &Memory){
         let addr = self.zpx(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn cmp_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn cmp_absx(&mut self, mem: &Memory){
         let addr = self.absx(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn cmp_absy(&mut self, mem: &Memory){
         let addr = self.absy(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn cmp_indx(&mut self, mem: &Memory){
         let addr = self.indx(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn cmp_indy(&mut self, mem: &Memory){
         let addr = self.indy(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.a >= m {C} else {0});
-        self.setZ(if self.a == m {C} else {0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setc(if self.a >= m {C} else {0});
+        self.setz(if self.a == m {C} else {0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     
     fn cpx_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setc(if self.x >= m {C} else {0});
+        self.setz(if self.x == m {C} else {0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn cpx_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
-    }
-    fn cpx_zpx(&mut self, mem: &Memory){
-        let addr = self.zpx(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setc(if self.x >= m {C} else {0});
+        self.setz(if self.x == m {C} else {0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn cpx_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
-    }
-    fn cpx_absx(&mut self, mem: &Memory){
-        let addr = self.absx(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
-    }
-    fn cpx_absy(&mut self, mem: &Memory){
-        let addr = self.absy(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
-    }
-    fn cpx_indx(&mut self, mem: &Memory){
-        let addr = self.indx(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
-    }
-    fn cpx_indy(&mut self, mem: &Memory){
-        let addr = self.indy(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.x >= m {C} else {0});
-        self.setZ(if self.x == m {C} else {0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setc(if self.x >= m {C} else {0});
+        self.setz(if self.x == m {C} else {0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     
     fn cpy_imm(&mut self, mem: &Memory){
         let addr = self.imm();
         let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setc(if self.y >= m {C} else {0});
+        self.setz(if self.y == m {C} else {0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     fn cpy_zp(&mut self, mem: &Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
-    }
-    fn cpy_zpx(&mut self, mem: &Memory){
-        let addr = self.zpx(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setc(if self.y >= m {C} else {0});
+        self.setz(if self.y == m {C} else {0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     fn cpy_abs(&mut self, mem: &Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
-    }
-    fn cpy_absx(&mut self, mem: &Memory){
-        let addr = self.absx(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
-    }
-    fn cpy_absy(&mut self, mem: &Memory){
-        let addr = self.absy(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
-    }
-    fn cpy_indx(&mut self, mem: &Memory){
-        let addr = self.indx(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
-    }
-    fn cpy_indy(&mut self, mem: &Memory){
-        let addr = self.indy(mem);
-        let m = self.read(mem, addr);
-        self.setC(if self.y >= m {C} else {0});
-        self.setZ(if self.y == m {C} else {0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setc(if self.y >= m {C} else {0});
+        self.setz(if self.y == m {C} else {0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
 
     fn inc_zp(&mut self, mem: &mut Memory){
         let addr = self.zp(mem);
         let value = self.read(mem, addr).wrapping_add(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     fn inc_zpx(&mut self, mem: &mut Memory){
         let addr = self.zpx(mem);
         let value = self.read(mem, addr).wrapping_add(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     fn inc_abs(&mut self, mem: &mut Memory){
         let addr = self.abs(mem);
         let value = self.read(mem, addr).wrapping_add(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     fn inc_absx(&mut self, mem: &mut Memory){
         let addr = self.absx(mem);
         let value = self.read(mem, addr).wrapping_add(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     
     fn inx(&mut self){
         self.x = self.x.wrapping_add(1);
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn iny(&mut self){
         self.y = self.y.wrapping_add(1);
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
 
     fn dec_zp(&mut self, mem: &mut Memory){
         let addr = self.zp(mem);
         let value = self.read(mem, addr).wrapping_sub(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     fn dec_zpx(&mut self, mem: &mut Memory){
         let addr = self.zpx(mem);
         let value = self.read(mem, addr).wrapping_sub(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     fn dec_abs(&mut self, mem: &mut Memory){
         let addr = self.abs(mem);
         let value = self.read(mem, addr).wrapping_sub(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     fn dec_absx(&mut self, mem: &mut Memory){
         let addr = self.absx(mem);
         let value = self.read(mem, addr).wrapping_sub(1);
         self.write(mem, addr, value);
-        self.setZ(if value==0{Z}else{0});
-        self.setN(if value&N!=0{N}else{0});
+        self.setz(if value==0{Z}else{0});
+        self.setn(if value&N!=0{N}else{0});
     }
     
     fn dex(&mut self){
         self.x = self.x.wrapping_sub(1);
-        self.setZ(if self.x==0{Z}else{0});
-        self.setN(if self.x&N!=0{N}else{0});
+        self.setz(if self.x==0{Z}else{0});
+        self.setn(if self.x&N!=0{N}else{0});
     }
     fn dey(&mut self){
         self.y = self.y.wrapping_sub(1);
-        self.setZ(if self.y==0{Z}else{0});
-        self.setN(if self.y&N!=0{N}else{0});
+        self.setz(if self.y==0{Z}else{0});
+        self.setn(if self.y&N!=0{N}else{0});
     }
     
     fn asl(&mut self){
-        self.setC(if self.a&0x80==1 {C} else {0});
+        self.setc(if self.a&0x80==1 {C} else {0});
         self.a <<= 1;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn asl_zp(&mut self, mem: &mut Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m<<1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m<<1==0{Z}else{0});
-        self.setN(if (m<<1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m<<1==0{Z}else{0});
+        self.setn(if (m<<1)&N!=0{N}else{0});
     }
     fn asl_zpx(&mut self, mem: &mut Memory){
         let addr = self.zpx(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m<<1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m<<1==0{Z}else{0});
-        self.setN(if (m<<1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m<<1==0{Z}else{0});
+        self.setn(if (m<<1)&N!=0{N}else{0});
     }
     fn asl_abs(&mut self, mem: &mut Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m<<1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m<<1==0{Z}else{0});
-        self.setN(if (m<<1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m<<1==0{Z}else{0});
+        self.setn(if (m<<1)&N!=0{N}else{0});
     }
     fn asl_absx(&mut self, mem: &mut Memory){
         let addr = self.absx(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m<<1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m<<1==0{Z}else{0});
-        self.setN(if (m<<1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m<<1==0{Z}else{0});
+        self.setn(if (m<<1)&N!=0{N}else{0});
     }
 
     fn lsr(&mut self){
-        self.setC(if self.a&0x80==1 {C} else {0});
+        self.setc(if self.a&0x80==1 {C} else {0});
         self.a >>= 1;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn lsr_zp(&mut self, mem: &mut Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m>>1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m>>1==0{Z}else{0});
-        self.setN(if (m>>1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m>>1==0{Z}else{0});
+        self.setn(if (m>>1)&N!=0{N}else{0});
     }
     fn lsr_zpx(&mut self, mem: &mut Memory){
         let addr = self.zpx(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m>>1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m>>1==0{Z}else{0});
-        self.setN(if (m>>1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m>>1==0{Z}else{0});
+        self.setn(if (m>>1)&N!=0{N}else{0});
     }
     fn lsr_abs(&mut self, mem: &mut Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m>>1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m>>1==0{Z}else{0});
-        self.setN(if (m>>1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m>>1==0{Z}else{0});
+        self.setn(if (m>>1)&N!=0{N}else{0});
     }
     fn lsr_absx(&mut self, mem: &mut Memory){
         let addr = self.absx(mem);
         let m = self.read(mem, addr);
         self.write(mem, addr, m>>1);
-        self.setC(if m&0x80==1 {C} else {0});
-        self.setZ(if m>>1==0{Z}else{0});
-        self.setN(if (m>>1)&N!=0{N}else{0});
+        self.setc(if m&0x80==1 {C} else {0});
+        self.setz(if m>>1==0{Z}else{0});
+        self.setn(if (m>>1)&N!=0{N}else{0});
     }
     
     fn rol(&mut self){
-        self.setC(if self.a&0x80==1 {C} else {0});
+        self.setc(if self.a&0x80==1 {C} else {0});
         let c = self.p&C;
         self.a = (self.a<<1)|c;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn rol_zp(&mut self, mem: &mut Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x80==1 {C} else {0});
+        self.setc(if m&0x80==1 {C} else {0});
         let c = self.p&C;
         let m1 = (m<<1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
     fn rol_zpx(&mut self, mem: &mut Memory){
         let addr = self.zpx(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x80==1 {C} else {0});
+        self.setc(if m&0x80==1 {C} else {0});
         let c = self.p&C;
         let m1 = (m<<1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
     fn rol_abs(&mut self, mem: &mut Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x80==1 {C} else {0});
+        self.setc(if m&0x80==1 {C} else {0});
         let c = self.p&C;
         let m1 = (m<<1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
     fn rol_absx(&mut self, mem: &mut Memory){
         let addr = self.absx(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x80==1 {C} else {0});
+        self.setc(if m&0x80==1 {C} else {0});
         let c = self.p&C;
         let m1 = (m<<1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
 
     fn ror(&mut self){
-        self.setC(if self.a&1==1 {C} else {0});
+        self.setc(if self.a&1==1 {C} else {0});
         let c = self.p&C;
         self.a = (self.a>>1)|c;
-        self.setZ(if self.a==0{Z}else{0});
-        self.setN(if self.a&N!=0{N}else{0});
+        self.setz(if self.a==0{Z}else{0});
+        self.setn(if self.a&N!=0{N}else{0});
     }
     fn ror_zp(&mut self, mem: &mut Memory){
         let addr = self.zp(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x1==1 {C} else {0});
+        self.setc(if m&0x1==1 {C} else {0});
         let c = (self.p&C)<<7;
         let m1 = (m>>1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
     fn ror_zpx(&mut self, mem: &mut Memory){
         let addr = self.zpx(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x80==1 {C} else {0});
+        self.setc(if m&0x80==1 {C} else {0});
         let c = (self.p&C)<<7;
         let m1 = (m>>1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
     fn ror_abs(&mut self, mem: &mut Memory){
         let addr = self.abs(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x80==1 {C} else {0});
+        self.setc(if m&0x80==1 {C} else {0});
         let c = (self.p&C)<<7;
         let m1 = (m>>1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
     fn ror_absx(&mut self, mem: &mut Memory){
         let addr = self.absx(mem);
         let m = self.read(mem, addr);
-        self.setC(if m&0x80==1 {C} else {0});
+        self.setc(if m&0x80==1 {C} else {0});
         let c = (self.p&C)<<7;
         let m1 = (m>>1)|c;
         self.write(mem, addr, m1);
-        self.setZ(if m1==0{Z}else{0});
-        self.setN(if m1&N!=0{N}else{0});
+        self.setz(if m1==0{Z}else{0});
+        self.setn(if m1&N!=0{N}else{0});
     }
 
     fn jmp_abs(&mut self, mem: &Memory){
@@ -1178,43 +1109,51 @@ impl Processor{
     }
  
     fn bcs(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&C==C{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));
+            self.pc  = pc;
         }
     }
     fn bcc(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&C!=C{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));            
+            self.pc  = pc;
         }
     }
     fn beq(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&Z==Z{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));            
+            self.pc  = pc;
         }
     }
     fn bne(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&Z!=Z{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));            
+            self.pc  = pc;
         }
     }
     fn bmi(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&N==N{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));            
+            self.pc  = pc;
         }
     }
     fn bpl(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&N!=N{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));            
+            self.pc  = pc;
         }
     }
     fn bvs(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&V==N{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));            
+            self.pc  = pc;
         }
     }
     fn bvc(&mut self, mem: &Memory){
+        let pc = self.rel(mem);
         if self.p&V==V{
-            self.pc  = self.pc.wrapping_add(self.rel(mem));            
+            self.pc  = pc;
         }
     }
     
@@ -1239,9 +1178,6 @@ impl Processor{
     }
     fn sei(&mut self){
         self.p = self.p|I;
-    }
-    fn sev(&mut self){
-        self.p = self.p|V;
     }
     
     fn brk(&mut self, mem: &mut Memory){
@@ -1304,7 +1240,7 @@ impl Processor{
             TAX => self.tax(),
             TXA => self.txa(),
             TAY => self.tay(),
-            TYA => self.tay(),
+            TYA => self.tya(),
             TSX => self.tsx(),
             TXS => self.txs(),
             
@@ -1342,6 +1278,106 @@ impl Processor{
             
             BIT_ZP => self.bit_zp(mem),
             BIT_ABS => self.bit_abs(mem),
+            
+            ADC_IMM => self.adc_imm(mem),
+            ADC_ZP => self.adc_zp(mem),
+            ADC_ZPX => self.adc_zpx(mem),
+            ADC_ABS => self.adc_abs(mem),
+            ADC_ABSX => self.adc_absx(mem),
+            ADC_ABSY => self.adc_absy(mem),
+            ADC_INDX => self.adc_indx(mem),
+            ADC_INDY => self.adc_indy(mem),
+
+            SBC_IMM => self.sbc_imm(mem),
+            SBC_ZP => self.sbc_zp(mem),
+            SBC_ZPX => self.sbc_zpx(mem),
+            SBC_ABS => self.sbc_abs(mem),
+            SBC_ABSX => self.sbc_absx(mem),
+            SBC_ABSY => self.sbc_absy(mem),
+            SBC_INDX => self.sbc_indx(mem),
+            SBC_INDY => self.sbc_indy(mem),
+
+            CMP_IMM => self.cmp_imm(mem),
+            CMP_ZP => self.cmp_zp(mem),
+            CMP_ZPX => self.cmp_zpx(mem),
+            CMP_ABS => self.cmp_abs(mem),
+            CMP_ABSX => self.cmp_absx(mem),
+            CMP_ABSY => self.cmp_absy(mem),
+            CMP_INDX => self.cmp_indx(mem),
+            CMP_INDY => self.cmp_indy(mem),
+            
+            CPX_IMM => self.cpx_imm(mem),
+            CPX_ZP => self.cpx_zp(mem),
+            CPX_ABS => self.cpx_abs(mem),
+
+            CPY_IMM => self.cpy_imm(mem),
+            CPY_ZP => self.cpy_zp(mem),
+            CPY_ABS => self.cpy_abs(mem),
+            
+            INC_ZP => self.inc_zp(mem),
+            INC_ZPX => self.inc_zpx(mem),
+            INC_ABS => self.inc_abs(mem),
+            INC_ABSX => self.inc_absx(mem),
+            INX => self.inx(),
+            INY => self.iny(),
+
+            DEC_ZP => self.dec_zp(mem),
+            DEC_ZPX => self.dec_zpx(mem),
+            DEC_ABS => self.dec_abs(mem),
+            DEC_ABSX => self.dec_absx(mem),
+            DEX => self.dex(),
+            DEY => self.dey(),
+            
+            ASL => self.asl(),
+            ASL_ZP => self.asl_zp(mem),
+            ASL_ZPX => self.asl_zpx(mem),
+            ASL_ABS => self.asl_abs(mem),
+            ASL_ABSX => self.asl_absx(mem),
+
+            LSR => self.lsr(),
+            LSR_ZP => self.lsr_zp(mem),
+            LSR_ZPX => self.lsr_zpx(mem),
+            LSR_ABS => self.lsr_abs(mem),
+            LSR_ABSX => self.lsr_absx(mem),
+
+            ROL => self.rol(),
+            ROL_ZP => self.rol_zp(mem),
+            ROL_ZPX => self.rol_zpx(mem),
+            ROL_ABS => self.rol_abs(mem),
+            ROL_ABSX => self.rol_absx(mem),
+
+            ROR => self.ror(),
+            ROR_ZP => self.ror_zp(mem),
+            ROR_ZPX => self.ror_zpx(mem),
+            ROR_ABS => self.ror_abs(mem),
+            ROR_ABSX => self.ror_absx(mem),
+            
+            JSR => self.jsr(mem),
+            RTS => self.rts(mem),
+            JMP_ABS => self.jmp_abs(mem),
+            JMP_IND => self.jmp_ind(mem),
+            
+            BPL => self.bpl(mem),
+            BMI => self.bmi(mem),
+            BEQ => self.beq(mem),
+            BNE => self.bne(mem),
+            BCC => self.bcc(mem),
+            BCS => self.bcs(mem),
+            BVC => self.bvc(mem),
+            BVS => self.bvs(mem),
+            
+            CLC => self.clc(),
+            CLD => self.cld(),
+            CLI => self.cli(),
+            CLV => self.clv(),
+            
+            SEC => self.sec(),
+            SED => self.sed(),
+            SEI => self.sei(),
+            
+            BRK => self.brk(mem),
+            RTI => self.rti(mem),
+            NOP => (),
             _ => {panic!("Unknown opcode {:02X}", opcode)}
         }
     }
@@ -1349,7 +1385,6 @@ impl Processor{
 
 impl Display for Processor{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, 
-            "A: {:X}\nX: {:X}\nY: {:X}\nPC: {:X}\nS: {:X}\nP: {:b}", self.a, self.x, self.y, self.pc, self.s, self.p)
+        write!(f, "{:X}        A: {:X} X: {:X} Y: {:X} SP: {:X} P: {:X}", self.pc, self.a, self.x, self.y, self.s, self.p)
     }
 }

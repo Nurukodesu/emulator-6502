@@ -1,5 +1,3 @@
-use std::os::linux::net::SocketAddrExt;
-
 #[derive(Debug)]
 pub struct Memory{
     data: [u8; 65536]
