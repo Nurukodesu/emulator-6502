@@ -1,32 +1,27 @@
-use std::io::{self};
+mod nestest;
+mod ppu;
+use nestest::nestest;
+// fn prompt(cpu: &mut Processor, mem: &mut Memory) -> u8{
+//     let mut buf = String::new();
+//     io::stdin().read_line(&mut buf).unwrap();
+//     let cmd = buf.trim();
 
-use emulator_6502::{load_nes, memory::Memory, processor::Processor, read_rom};
+//     match cmd{
+//         "e" => return 2,
+//         "s" => {
+//             println!("{:X}",mem.read(((cpu.s  as u16) + 1) | 0x100));
+//             return 1    
+//         },
+//         _ => match cmd.parse::<u8>() {
+//                 Ok(value) => {
+//                     mem.display_pg(value);
+//                     return 1
+//                 },
+//                 Err(_) => return 0
+//         }
+//     }
+// }
 
-fn main() {
-    let rom = read_rom("test/nestest.nes");
-    let mut mem = Memory::new();
-    load_nes(&mut mem, &rom);
-    let mut cpu = Processor::nes();
-    
-    println!("{}\n", cpu);
-    
-    loop{
-        let mut buf = String::new();
-        io::stdin().read_line(&mut buf).unwrap();
-        if buf.trim().eq("e"){
-            break;
-        }
-
-        match buf.trim().parse::<u8>() {
-            Ok(value) => {
-                mem.display_pg(value);
-                continue;
-            },
-            Err(_) => ()
-        }
-
-
-        cpu.step(&mut mem);
-        println!("{}\n", cpu);
-    }
+fn main(){
+    nestest().unwrap();
 }

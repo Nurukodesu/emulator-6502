@@ -17,6 +17,7 @@ pub const BASE_CYCLES: [u8; 256] = [
 /* 0xF0 */ 2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
 ];
 
+pub const TEST:u8 = BASE_CYCLES[0xD3];
 
 pub const LDA_IMM: u8 = 0xA9;
 pub const LDA_ZP: u8 = 0xA5;
@@ -163,8 +164,8 @@ pub const LSR_ABSX: u8 = 0x5E;
 pub const ROL: u8 = 0x2A;
 pub const ROL_ZP: u8 = 0x26;
 pub const ROL_ZPX: u8 = 0x36;
-pub const ROL_ABS: u8 = 0x02;
-pub const ROL_ABSX: u8 = 0x13;
+pub const ROL_ABS: u8 = 0x2E;
+pub const ROL_ABSX: u8 = 0x3E;
 
 pub const ROR: u8 = 0x6A;
 pub const ROR_ZP: u8 = 0x66;
@@ -198,3 +199,64 @@ pub const SEI: u8 = 0x78;
 pub const BRK: u8 = 0x00;
 pub const RTI: u8 = 0x40;
 pub const NOP: u8 = 0xEA;
+
+// Illegal opcodes
+pub const LAX_ZP:   u8 = 0xA7;
+pub const LAX_ZPY:  u8 = 0xB7;
+pub const LAX_ABS:  u8 = 0xAF;
+pub const LAX_ABSY: u8 = 0xBF;
+pub const LAX_INDX: u8 = 0xA3;
+pub const LAX_INDY: u8 = 0xB3;
+
+pub const SAX_ZP:   u8 = 0x87;
+pub const SAX_ZPY:  u8 = 0x97;
+pub const SAX_ABS:  u8 = 0x8F;
+pub const SAX_INDX: u8 = 0x83;
+
+pub const DCP_ZP:    u8 = 0xC7;
+pub const DCP_ZPX:   u8 = 0xD7;
+pub const DCP_ABS:   u8 = 0xCF;
+pub const DCP_ABSX:  u8 = 0xDF;
+pub const DCP_ABSY:  u8 = 0xDB;
+pub const DCP_INDX:  u8 = 0xC3;
+pub const DCP_INDY:  u8 = 0xD3;
+
+pub const ISC_ZP: u8    = 0xE7;
+pub const ISC_ZPX: u8   = 0xF7;
+pub const ISC_ABS: u8   = 0xEF;
+pub const ISC_ABSX: u8  = 0xFF;
+pub const ISC_ABSY: u8  = 0xFB;
+pub const ISC_INDX: u8  = 0xE3;
+pub const ISC_INDY: u8  = 0xF3;
+
+pub const SLO_ZP:    u8 = 0x07;
+pub const SLO_ZPX:   u8 = 0x17;
+pub const SLO_ABS:   u8 = 0x0F;
+pub const SLO_ABSX:  u8 = 0x1F;
+pub const SLO_ABSY:  u8 = 0x1B;
+pub const SLO_INDX:  u8 = 0x03;
+pub const SLO_INDY:  u8 = 0x13;
+
+pub const RLA_ZP:    u8 = 0x27;
+pub const RLA_ZPX:   u8 = 0x37;
+pub const RLA_ABS:   u8 = 0x2F;
+pub const RLA_ABSX:  u8 = 0x3F;
+pub const RLA_ABSY:  u8 = 0x3B;
+pub const RLA_INDX:  u8 = 0x23;
+pub const RLA_INDY:  u8 = 0x33;
+
+pub const SRE_ZP:    u8 = 0x47;
+pub const SRE_ZPX:   u8 = 0x57;
+pub const SRE_ABS:   u8 = 0x4F;
+pub const SRE_ABSX:  u8 = 0x5F;
+pub const SRE_ABSY:  u8 = 0x5B;
+pub const SRE_INDX:  u8 = 0x43;
+pub const SRE_INDY:  u8 = 0x53;
+
+pub const RRA_ZP:    u8 = 0x67;
+pub const RRA_ZPX:   u8 = 0x77;
+pub const RRA_ABS:   u8 = 0x6F;
+pub const RRA_ABSX:  u8 = 0x7F;
+pub const RRA_ABSY:  u8 = 0x7B;
+pub const RRA_INDX:  u8 = 0x63;
+pub const RRA_INDY:  u8 = 0x73;
