@@ -134,6 +134,7 @@ impl Processor{
         let addr = base.wrapping_add(self.x as u16);
         if base&0xFF00 != addr &0xFF00{
             self.cycles+=1;
+            self.page_crossed = true;
         }
         addr
     }
@@ -151,6 +152,7 @@ impl Processor{
         let addr = base.wrapping_add(self.y as u16);
         if base&0xFF00 != addr &0xFF00{
             self.cycles+=1;
+            self.page_crossed = true;
         }
         addr
     }
@@ -184,6 +186,7 @@ impl Processor{
         let addr = base.wrapping_add(self.y as u16);
         if base&0xFF00 != addr &0xFF00{
             self.cycles+=1;
+            self.page_crossed = true;
         }
         self.pc = self.pc.wrapping_add(1);
         addr
