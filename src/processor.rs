@@ -1180,7 +1180,7 @@ impl Processor{
     }
  
     fn bcs(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&C==C{
             self.pc  = pc;
@@ -1192,7 +1192,7 @@ impl Processor{
         }
     }
     fn bcc(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&C!=C{
             self.pc  = pc;
@@ -1204,7 +1204,7 @@ impl Processor{
         }
     }
     fn beq(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&Z==Z{
             self.pc  = pc;
@@ -1216,7 +1216,7 @@ impl Processor{
         }
     }
     fn bne(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&Z!=Z{
             self.pc  = pc;
@@ -1228,7 +1228,7 @@ impl Processor{
         }
     }
     fn bmi(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&N==N{
             self.pc  = pc;
@@ -1240,7 +1240,7 @@ impl Processor{
         }
     }
     fn bpl(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&N!=N{
             self.pc  = pc;
@@ -1252,7 +1252,7 @@ impl Processor{
         }
     }
     fn bvs(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&V==V{
             self.pc  = pc;
@@ -1264,7 +1264,7 @@ impl Processor{
         }
     }
     fn bvc(&mut self, mem: &Memory){
-        let old_pc = self.pc;
+        let old_pc = self.pc + 2;
         let pc = self.rel(mem);
         if self.p&V!=V{
             self.pc  = pc;

@@ -64,9 +64,6 @@ pub fn nestest() -> io::Result<()>{
 
             cpu.step(&mut mem);
             println!("{cpu}");
-            if ppu.scanline() == ppu.cross_scanline() && cpu.page_crossed(){
-                cpu.cycles -= 1;
-            }
             ppu.step_cpu(cpu.cycles);
         }
     }

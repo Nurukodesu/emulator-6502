@@ -11,15 +11,6 @@ impl ClockPPU {
         self.cycles += cpu_cycles as u64 * 3;
     }
 
-    pub fn scanline(&self) -> u16 {
-        (self.cycles / 341) as u16
-    }
-    
-    pub fn cross_scanline(&self) -> u16 {
-        ((self.cycles + 3)/341) as u16
-    }
-
-
     pub fn cyc(&self) -> u32 {
         (self.cycles % 341) as u32
     }
