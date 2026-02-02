@@ -1,10 +1,12 @@
 # WIP
 
 ## Todo list
-Working Emulator - Done
+Working Emulator - Done  
+Clock cycle level accurate - Done  
+Passes nestest - Done  
 
 Text User Interface - WIP
 
 GUI - Planned
 
-Clock cycle accurate - Planned
+
